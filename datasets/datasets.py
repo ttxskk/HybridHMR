@@ -139,7 +139,7 @@ class UPDataset(torch.utils.data.Dataset):
 
     def __init__(self, options):
         super(UPDataset, self).__init__()
-        self.up3d_dataset = BaseDataset(options, 'avatar')
+        self.up3d_dataset = BaseDataset(options, 'up-3d')
         self.length = len(self.up3d_dataset)
 
     def __getitem__(self, i):
