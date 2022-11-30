@@ -6,52 +6,48 @@ Things you need to change: *_ROOT that indicate the path to each dataset
 """
 from os.path import join
 
-# Define paths to each dataset
-# H36M_TRAIN = '/home/sunqingping/mnt/data/Dataset/GraphCMR/human3.6datasets'
-H36M_TRAIN = '/home/sunqingping/PycharmProjects/data/c2f_vol.zip/c2f_vol'
-H36M_ROOT = '/home/sunqingping/PycharmProjects/data/human3.6'
-LSP_ROOT = '/home/sunqingping/PycharmProjects/data/lsp_dataset'
-LSPET_ROOT = '/home/sunqingping/mnt/data/Dataset/GraphCMR/hr-lspet'
-LSP_ORIGINAL_ROOT = '/home/sunqingping/mnt/data/Dataset/GraphCMR/lsp_dataset_original'
-UPI_S1H_ROOT = '/home/sunqingping/mnt/data/Dataset/GraphCMR/upi-s1h'
-MPII_ROOT = '/home/sunqingping/mnt/data/Dataset/GraphCMR/mpii_human_pose_v1'
-COCO_ROOT = '/home/sunqingping/PycharmProjects/data/COCO/val2017'
-# COCO_ROOT = '/home/sunqingping/mnt/data/Dataset/GraphCMR/COCO/train2014'
-
-UP_3D_ROOT = '/home/sunqingping/PycharmProjects/data/up-3d'
-AVATAR_ROOT = '/home/sunqingping/PycharmProjects/data/AVATAR'
-PW3D_ROOT = '/home/sunqingping/mnt/data/Dataset/SPIN/3DPW'
-MPI_INF_3DHP_ROOT = '/home/sunqingping/mnt/data/Dataset/SPIN/mpi_inf_3dhp'
-SURREAL_ROOT = '/home/sunqingping/PycharmProjects/data/SURREAL_v1'
+H36M_TRAIN = ''
+H36M_ROOT = ''
+LSP_ROOT = '' 
+LSPET_ROOT = ''
+LSP_ORIGINAL_ROOT = ''
+UPI_S1H_ROOT = ''
+MPII_ROOT = ''
+COCO_ROOT = ''
+UP_3D_ROOT = '/content/drive/MyDrive/EE_5811/data/dataset/up-3d'
+AVATAR_ROOT = ''
+PW3D_ROOT = ''
+MPI_INF_3DHP_ROOT = ''
+SURREAL_ROOT = ''
 
 # Output folder to save test/train npz files
-DATASET_NPZ_PATH = 'datasets'
+DATASET_NPZ_PATH = '/content/drive/MyDrive/EE_5811/data/preprocessed_npz' # change
 
 JOINT_NUM = {'h36m': 14,
-             'up-3d': 14,
-             'h36m-p2': 14}
+            'up-3d': 14,
+            'h36m-p2': 14}
 # Path to test/train npz files
 
-DATASET_FILES = [{'h36m-p1': join(DATASET_NPZ_PATH, 'extras', 'h36m_valid_protocol1.npz'),
-                'h36m-p2': join(DATASET_NPZ_PATH, 'extras', 'h36m_valid_protocol2.npz'),
+DATASET_FILES = [{'h36m-p1': join(DATASET_NPZ_PATH, 'h36m_valid_protocol1.npz'),
+                'h36m-p2': join(DATASET_NPZ_PATH, 'h36m_valid_protocol2.npz'),
                 'lsp-orig': join(DATASET_NPZ_PATH, 'lsp_dataset_original_test.npz'),
-                'lsp': join(DATASET_NPZ_PATH, 'extras', 'lsp_dataset_test.npz'),
-                'up-3d': join(DATASET_NPZ_PATH, 'extras', 'up_3d_lsp_test.npz'),
-                'h36m': join(DATASET_NPZ_PATH, 'extras', 'h36m_train_new_1.3.npz'),
-                'mpi-inf-3dhp': join(DATASET_NPZ_PATH, 'extras', 'mpi_inf_3dhp_test.npz'),
-                '3dpw': join(DATASET_NPZ_PATH, 'extras', '3dpw_test.npz'),
-                'coco': join(DATASET_NPZ_PATH, 'extras', 'coco_2017_val.npz'),
+                'lsp': join(DATASET_NPZ_PATH, 'lsp_dataset_test.npz'),
+                'up-3d': join(DATASET_NPZ_PATH, 'up_3d_lsp_test.npz'),
+                'h36m': join(DATASET_NPZ_PATH, 'h36m_train_new_1.3.npz'),
+                'mpi-inf-3dhp': join(DATASET_NPZ_PATH, 'mpi_inf_3dhp_test.npz'),
+                '3dpw': join(DATASET_NPZ_PATH, '3dpw_test.npz'),
+                'coco': join(DATASET_NPZ_PATH, 'coco_2017_val.npz'),
                 },
 
                 {
-                'mpi-inf-3dhp': join(DATASET_NPZ_PATH, 'extras','mpi_inf_3dhp_train.npz'),
-                'lsp-orig': join(DATASET_NPZ_PATH, 'extras', 'lsp_dataset_original_train.npz'),
-                'mpii': join(DATASET_NPZ_PATH, 'extras', 'mpii_train.npz'),
-                'coco': join(DATASET_NPZ_PATH, 'extras', 'coco_2017_train.npz'),
-                'lspet': join(DATASET_NPZ_PATH, 'extras', 'hr-lspet_train.npz'),
-                'up-3d': join(DATASET_NPZ_PATH, 'extras', 'cmr_up_3d_trainval.npz'),
-                'avatar': join(DATASET_NPZ_PATH, 'extras', 'avatar.npz'),
-                'h36m': join(DATASET_NPZ_PATH, 'extras', 'h36m_train_new_1.3.npz'),
+                'mpi-inf-3dhp': join(DATASET_NPZ_PATH, 'mpi_inf_3dhp_train.npz'),
+                'lsp-orig': join(DATASET_NPZ_PATH, 'lsp_dataset_original_train.npz'),
+                'mpii': join(DATASET_NPZ_PATH, 'mpii_train.npz'),
+                'coco': join(DATASET_NPZ_PATH, 'coco_2017_train.npz'),
+                'lspet': join(DATASET_NPZ_PATH, 'hr-lspet_train.npz'),
+                'up-3d': join(DATASET_NPZ_PATH, 'cmr_up_3d_trainval.npz'),
+                'avatar': join(DATASET_NPZ_PATH, 'avatar.npz'),
+                'h36m': join(DATASET_NPZ_PATH, 'h36m_train_new_1.3.npz'),
                 }
                 ]
 DATASET_FOLDERS = {
@@ -115,34 +111,7 @@ The joints used here are:
 """
 JOINTS_IDX = [8, 5, 29, 30, 4, 7, 21, 19, 17, 16, 18, 20, 31, 32, 33, 34, 35, 36, 37, 24, 26, 25, 28, 27]
 STATIC_FITS_DIR = './data/static_fits'
-'''
-human3.6 keypoint
-0 - Spine Base
-1 - Right Hip
-2 - Left Hip
-3 - Spine Mid
-4 - Right Knee
-5 - Left Knee
-6 -  
-7 - Right Ankle
-8 - Left Ankle
-9 -  
-10 - Foot Right  
-11 - Foot Left
-12 - Spine Shoudler
-13 -  
-14 -  
-15 - 
-16 - Left Shoulder
-17 - Right Shoulder
-18 - Right Elbow
-19 - Left Elbow
-20 - Right Wrist
-21 - Left Wrist
-22 - 
-23 - Left Hand
-24 - Right Hand
-'''
+
 # Joint selectors
 # Indices to get the 14 LSP joints from the 17 H36M joints
 

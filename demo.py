@@ -8,16 +8,21 @@ import numpy as np
 import cv2
 import argparse
 import json
+import os
 
 from utils.mesh import Mesh
 from models.cmr_431 import CMR
 from utils.imutils import crop
 from utils.renderer import Renderer
+from models import SMPL
 # from utils.renderer_1 import Renderer
 import config as cfg
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--checkpoint', default='/home/sunqingping/mnt/data/graphcnn_data_processed/3.14/155.pt', help='Path to pretrained checkpoint')
+parser.add_argument(
+    '--checkpoint',
+    default='/home/sunqingping/mnt/data/graphcnn_data_processed/copy1080ti/2.PT', 
+    help='Path to pretrained checkpoint')
 parser.add_argument('--img', type=str, help='Path to input image')
 parser.add_argument('--bbox', type=str, default=None, help='Path to .json file containing bounding box coordinates')
 parser.add_argument('--openpose', type=str, default=None, help='Path to .json containing openpose detections')
@@ -80,17 +85,20 @@ def process_image(img_file, bbox_file, openpose_file, input_res=224):
 
 
 if __name__ == '__main__':
-    img_foler= '/home/sunqingping/PycharmProjects/vis_result/test'
-    import os
-    img_li = [os.path.join(img_foler,img_na) for img_na in os.listdir(img_foler)]
-    for img_path in img_li:
-        img, norm_img = process_image(img_path, None, None, input_res=224)
-        cv2.imwrite(img_path,img.permute(1, 2, 0).cpu().numpy()[:,:,::-1]*255)
     args = parser.parse_args()
-    args.checkpoint = '/home/sunqingping/mnt/data/graphcnn_data_processed/copy1080ti/2.PT'
-    output_path = '/home/sunqingping/PycharmProjects/data/vis_result/1080/HybridCMR/best'
+    img_folder= './test_data'
+    output_path = './demo_result'
+    
+    img_list = [
+        os.path.join(img_folder,img_name) for img_name in os.listdir(img_folder)]
+    
+    # for img_path in img_list:
+    #     img, norm_img = process_image(img_path, None, None, input_res=224)
+    #     cv2.imwrite(img_path, img.permute(1, 2, 0).cpu().numpy()[:,:,::-1]*255)
+        
     # Load model
     mesh = Mesh()
+    
     # Our pretrained networks have 5 residual blocks with 256 channels.
     # You might want to change this if you use a different architecture.
     model = CMR(mesh, 5, 256, pretrained_checkpoint=args.checkpoint)
@@ -99,15 +107,20 @@ if __name__ == '__main__':
 
     # Setup renderer for visualization
     # renderer = Renderer()
-    from models import SMPL
     faces = SMPL().faces
-    renderer = Renderer(focal_length=cfg.FOCAL_LENGTH, img_res=256, faces=faces)
-    img_foler= '/home/sunqingping/PycharmProjects/data/test'
-    import os
-    img_li = [os.path.join(img_foler,img_na) for img_na in os.listdir(img_foler)]
-    for img_path in img_li:
+    renderer = Renderer(
+        focal_length=cfg.FOCAL_LENGTH, 
+        img_res=256, 
+        faces=faces)
+    
+    for img_path in img_list:
         # Preprocess input image and generate predictions
-        img, norm_img = process_image(img_path, args.bbox, args.openpose, input_res=cfg.INPUT_RES)
+        img, norm_img = \
+            process_image(
+                img_path, 
+                args.bbox, 
+                args.openpose, 
+                input_res=cfg.INPUT_RES)
         with torch.no_grad():
             # pred_vertices, pred_vertices_smpl, pred_camera, _, _ = model(norm_img.cuda())
             (pred_vertices_graphcnn_431, pred_vertices_hmr, 
@@ -135,10 +148,16 @@ if __name__ == '__main__':
         img = img.permute(1, 2, 0).cpu().numpy()
 
         # Render non-parametric shape
-        img_gcnn = renderer(pred_vertices_431,camera_translation_431, img)
+        img_refine = renderer(
+            pred_vertices_431,
+            camera_translation_431,
+            img)
 
         # Render parametric shape
-        img_smpl = renderer(pred_vertices_hmr,camera_translation_hmr, img)
+        img_coarse = renderer(
+            pred_vertices_hmr,
+            camera_translation_hmr, 
+            img)
 
         # Render side views
         aroundy = cv2.Rodrigues(np.array([0, np.radians(90.), 0]))[0]
@@ -170,7 +189,6 @@ if __name__ == '__main__':
         outfile = os.path.join(output_path,outfile.split('/')[-1])
 
         # Save reconstructions
-        cv2.imwrite(outfile + '_431_my.png', 255 * img_gcnn[:, :, ::-1])
-        cv2.imwrite(outfile + '_hmr_my.png', 255 * img_smpl[:, :, ::-1])
-        # cv2.imwrite(outfile + '_431_side_my.png', 255 * img_gcnn_side[:, :, ::-1])
-        # cv2.imwrite(outfile + '_hmr_side_my.png', 255 * img_smpl_side[:, :, ::-1])
+        cv2.imwrite(outfile + '_refine.png', 255 * img_refine[:, :, ::-1])
+        cv2.imwrite(outfile + '_coarse.png', 255 * img_coarse[:, :, ::-1])
+

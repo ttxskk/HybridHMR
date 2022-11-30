@@ -49,36 +49,24 @@ class FullDataset(torch.utils.data.Dataset):
         lspnum = 1*len(self.lsp_dataset)
         lspextnum = 1*len(self.lspext_dataset)
         m3dhpnum = 1.5*len(self.m3dhp_dataset)
-        r1 = h36num / float(h36num + up3dnum +coconum + mpiinum + lspnum + m3dhpnum + lspextnum)
-        r2 = up3dnum / float(h36num + up3dnum +coconum + mpiinum + lspnum + m3dhpnum + lspextnum)
-        r3 = coconum / float(h36num + up3dnum +coconum + mpiinum + lspnum + m3dhpnum + lspextnum)
-        r4 = mpiinum / float(h36num + up3dnum +coconum + mpiinum + lspnum + m3dhpnum + lspextnum)
-        r5 = lspnum / float(h36num + up3dnum +coconum + mpiinum + lspnum + m3dhpnum + lspextnum)
-        r6 = m3dhpnum / float(h36num + up3dnum + coconum + mpiinum + lspnum + m3dhpnum + lspextnum)
-        r7 = lspextnum / float(h36num + up3dnum + coconum + mpiinum + lspnum + m3dhpnum + lspextnum)
+        
+        total = \
+            float(
+                h36num + up3dnum + coconum + 
+                mpiinum + lspnum + m3dhpnum +
+                lspextnum)
+            
+        r1 = h36num / total
+        r2 = up3dnum / total
+        r3 = coconum / total
+        r4 = mpiinum / total
+        r5 = lspnum / total
+        r6 = m3dhpnum / total
+        r7 = lspextnum / total
         # self.partition = np.array([.3, .1, .2, .2, .2]).cumsum()
         self.partition = np.array([r1, r2, r3, r4, r5, r6, r7]).cumsum()
 
-        # self.h36m_dataset = BaseDataset(options, 'h36m')
-        # self.lsp_dataset = BaseDataset(options, 'lsp-orig')
-        # self.coco_dataset = BaseDataset(options, 'coco')
-        # self.mpii_dataset = BaseDataset(options, 'mpii')
-        # self.up3d_dataset = BaseDataset(options, 'up-3d')
-
-        # TODO: modify max to sum
-
-        # self.length = max([len(self.h36m_dataset)])
-        # Define probability of sampling from each detaset
-        # self.partition = np.array([.3, .1, .2, .2, .2]).cumsum()
-        # h36num = len(self.h36m_dataset)
-        # r1 = h36num / float(h36num )
-        # self.partition = np.array([.3, .1, .2, .2, .2]).cumsum()
-        # self.partition = np.array([r1]).cumsum()
-
     def __getitem__(self, i):
-
-        # TODO: modify random to sure, if i > len(self.h36m_dataset) return self.up3d_dataset[i % len(self.up3d_dataset)]
-
         p = np.random.rand()
         # Randomly choose element from each of the datasets according to the predefined probabilities
         if p <= self.partition[0]:
@@ -145,6 +133,20 @@ class SMPLDDataset(torch.utils.data.Dataset):
 
     def __len__(self):
         return self.length
+    
+class UPDataset(torch.utils.data.Dataset):
+    """Mixed dataset with data only from "in-the-wild" datasets (no data from H36M)."""
+
+    def __init__(self, options):
+        super(UPDataset, self).__init__()
+        self.up3d_dataset = BaseDataset(options, 'avatar')
+        self.length = len(self.up3d_dataset)
+
+    def __getitem__(self, i):
+        return self.up3d_dataset[i % len(self.up3d_dataset)]
+
+    def __len__(self):
+        return self.length
 
 
 def create_dataset(dataset, options):
@@ -156,5 +158,7 @@ def create_dataset(dataset, options):
         return Human36Dataset(options)
     elif dataset == 'smpl_d':
         return SMPLDDataset(options)
+    elif dataset == 'lsp':
+        return UPDataset(options)
     else:
         raise ValueError('Unknown dataset')
