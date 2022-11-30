@@ -158,7 +158,7 @@ def create_dataset(dataset, options):
         return Human36Dataset(options)
     elif dataset == 'smpl_d':
         return SMPLDDataset(options)
-    elif dataset == 'lsp':
+    elif dataset == 'up':
         return UPDataset(options)
     else:
         raise ValueError('Unknown dataset')

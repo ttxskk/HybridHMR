@@ -34,7 +34,7 @@ class TrainOptions(object):
         arch.add_argument('--img_res', type=int, default=256, help='Rescale bounding boxes to size [img_res, img_res] before feeding it in the network')
 
         train = self.parser.add_argument_group('Training Options')
-        train.add_argument('--dataset', default='smpl_d', choices=['itw', 'all' ,'human3.6','smpl_d'], help='Choose training dataset')
+        train.add_argument('--dataset', default='smpl_d', choices=['itw', 'all' ,'human3.6','smpl_d', 'up'], help='Choose training dataset')
         train.add_argument('--num_epochs', type=int, default=20000, help='Total number of training epochs')
         train.add_argument('--batch_size', type=int, default=16, help='Batch size')
         train.add_argument('--summary_steps', type=int, default=100, help='Summary saving frequency')
