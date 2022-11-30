@@ -1,4 +1,4 @@
-scikit-image==0.14.1
+scikit-image
 chumpy==0.69
 tqdm==4.42.0
 numpy==1.18.1
