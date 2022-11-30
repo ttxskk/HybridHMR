@@ -20,7 +20,7 @@ class CMR(nn.Module):
         super(CMR, self).__init__()
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         self.backbone = resnet50(pretrained=True).to(self.device)
-        self.hmr_model = HMR('./data/smpl_mean_params.npz').to(self.device)
+        self.hmr_model = HMR('/content/drive/MyDrive/EE_5811/data/smpl_mean_params.npz').to(self.device)
         self.gcn_feature = GCN_feature().to(self.device)
         self.posenet = PoseNet().to(self.device)
         self.jointregressor = JointLocationLoss().to(self.device)

@@ -43,7 +43,7 @@ class Trainer(BaseTrainer):
         self.mesh = Mesh()
         self.faces = self.mesh.faces.to(self.device)
         self.mesh._A
-        self.hmr_model = hmr('./data/smpl_mean_params.npz', pretrained=True).to(self.device)
+        self.hmr_model = hmr('/content/drive/MyDrive/EE_5811/data/smpl_mean_params.npz', pretrained=True).to(self.device)
         # create GraphCNN_431
         self.graph_431 = GraphCNN_431(self.mesh._A, num_channels=self.options.num_channels,
                                       num_layers=self.options.num_layers).to(self.device)

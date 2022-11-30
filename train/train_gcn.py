@@ -50,7 +50,7 @@ class Trainer(BaseTrainer):
         self.faces = self.mesh.faces.to(self.device)
         self.mesh._A
         self.best_result = 999999.
-        self.hmr_model = hmr('./data/smpl_mean_params.npz', pretrained=True).to(self.device)
+        self.hmr_model = hmr('/content/drive/MyDrive/EE_5811/data/smpl_mean_params.npz', pretrained=True).to(self.device)
         self.cnn_stage =cnn_stage.hmr('./data/smpl_mean_params.npz', pretrained=True).to(self.device)
         self.train_ds = create_dataset(self.options.dataset, self.options)
         self.mpjpe, self.recon_err, self.mpjpe_431, self.recon_err_431, self.mpjpe_smpl_hmr, self.recon_err_hmr = [], [], [], [], [], []
