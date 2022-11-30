@@ -70,14 +70,14 @@ DATASET_FOLDERS = {
 }
 
 OPENPOSE_PATH = 'datasets/openpose'
-CUBE_PARTS_FILE = './data/cube_parts.npy'
-JOINT_REGRESSOR_TRAIN_EXTRA = './data/J_regressor_extra.npy'
-JOINT_REGRESSOR_H36M = './data/J_regressor_h36m.npy'
-VERTEX_TEXTURE_FILE = './data/vertex_texture.npy'
-SMPL_FILE = './data/basicModel_neutral_lbs_10_207_0_v1.0.0.pkl'
-MALE_SMPL_FILE = 'data/basicmodel_m_lbs_10_207_0_v1.0.0.pkl'
-FEMALE_SMPL_FILE = 'data/basicModel_f_lbs_10_207_0_v1.0.0.pkl'
-LSP_REGRESSOR_EVAL = 'data/smpl2lsp_j_regressor_nt_v2.npy'
+CUBE_PARTS_FILE = '/content/drive/MyDrive/EE_5811/data/cube_parts.npy'
+JOINT_REGRESSOR_TRAIN_EXTRA = '/content/drive/MyDrive/EE_5811/data/J_regressor_extra.npy'
+JOINT_REGRESSOR_H36M = '/content/drive/MyDrive/EE_5811/data/J_regressor_h36m.npy'
+VERTEX_TEXTURE_FILE = '/content/drive/MyDrive/EE_5811/data/vertex_texture.npy'
+SMPL_FILE = '/content/drive/MyDrive/EE_5811/data/basicModel_neutral_lbs_10_207_0_v1.0.0.pkl'
+MALE_SMPL_FILE = '/content/drive/MyDrive/EE_5811/data/basicmodel_m_lbs_10_207_0_v1.0.0.pkl'
+FEMALE_SMPL_FILE = '/content/drive/MyDrive/EE_5811/data/basicModel_f_lbs_10_207_0_v1.0.0.pkl'
+LSP_REGRESSOR_EVAL = '/content/drive/MyDrive/EE_5811/data/smpl2lsp_j_regressor_nt_v2.npy'
 
 """
 Each dataset uses different sets of joints.
