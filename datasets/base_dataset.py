@@ -262,7 +262,7 @@ class BaseDataset(Dataset):
         flip, pn, rot, sc = self.augm_params()
 
         # Load image
-        imgname = join(self.img_dir, str(self.imgname[index]))
+        imgname = join(self.img_dir, str(self.imgname[index]).decode())
         print(self.img_dir)
         try:
             img = cv2.imread(imgname)[:, :, ::-1].copy().astype(np.float32)
