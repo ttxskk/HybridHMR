@@ -1,11 +1,9 @@
 chumpy==0.69
-tqdm==4.42.0
-numpy==1.19.2
+tqdm==4.19.9
+numpy==1.15.4
 opendr==0.78
-opencv_python==4.1.2.30
+opencv_python==3.4.4.19
 h5py==2.10.0
-scipy==1.4.1
-ipdb==0.13.3
-# scikit-image
-spacepy
+scipy==1.2.0
+scikit-image==0.14.1
 # neural-renderer-pytorch
