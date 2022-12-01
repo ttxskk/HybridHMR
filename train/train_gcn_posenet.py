@@ -142,7 +142,7 @@ class Trainer(BaseTrainer):
                                                    self.step_count) 
                         tqdm.write('Checkpoint saved')
                     train_gen.set_description(
-                        'Epoch:%d total_loss:%f total_loss_hmr:%f total_loss_431:%f jointloca_loss:%f kp2d_hmr:%f \n kp3d_hmr:%f loss_shape:%f pose:%f betas:%f loss_shape_431:%f kp2d_431:%f kp3d_431:%f edge_431:%f normal_431:%f ' % (
+                        'Epoch:%d total_loss:%f total_loss_hmr:%f total_loss_431:%f jointloca_loss:%f kp2d_hmr:%f kp3d_hmr:%f loss_shape:%f pose:%f betas:%f loss_shape_431:%f kp2d_431:%f kp3d_431:%f edge_431:%f normal_431:%f ' % (
                             epoch, out_hmr[1], out_hmr[2], out_431[1],out_posenet, out_hmr[6], out_hmr[7], out_hmr[8], out_hmr[9],
                             out_hmr[10], out_431[7], out_431[5], out_431[6], out_431[9], out_431[8]))
                 self.step_count += 1
