@@ -180,8 +180,7 @@ if __name__ == '__main__':
             camera_translation_hmr, 
             np.ones_like(img))
 
-        outfile = img_path.split('.')[0] \
-            if args.outfile is None else args.outfile
+        outfile = img_path.split('.')[0]
 
 
         if not os.path.exists(output_path):
