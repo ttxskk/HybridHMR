@@ -109,8 +109,10 @@ if __name__ == '__main__':
     # renderer = Renderer()
     faces = SMPL().faces
     renderer = Renderer(
-        focal_length=cfg.FOCAL_LENGTH, 
-        img_res=256, 
+        # focal_length=cfg.FOCAL_LENGTH, 
+        # img_res=256, 
+        width=256,
+        height=256,
         faces=faces)
     
     for img_path in img_list:
