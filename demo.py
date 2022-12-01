@@ -13,9 +13,9 @@ import os
 from utils.mesh import Mesh
 from models.cmr_431 import CMR
 from utils.imutils import crop
-from utils.renderer import Renderer
+# from utils.renderer import Renderer
 from models import SMPL
-# from utils.renderer_1 import Renderer
+from utils.renderer_1 import Renderer
 import config as cfg
 
 parser = argparse.ArgumentParser()
@@ -109,10 +109,8 @@ if __name__ == '__main__':
     # renderer = Renderer()
     faces = SMPL().faces
     renderer = Renderer(
-        # focal_length=cfg.FOCAL_LENGTH, 
-        # img_res=256, 
-        width=256,
-        height=256,
+        focal_length=cfg.FOCAL_LENGTH, 
+        img_res=256, 
         faces=faces)
     
     for img_path in img_list:
