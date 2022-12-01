@@ -24,11 +24,35 @@ class CheckpointSaver(object):
             return os.path.isfile(checkpoint_file)
 
 
-    def save_checkpoint(self, models, optimizers, epoch, batch_idx, batch_size, dataset_perm, total_step_count, mpjpe,
-                        best_result=False):
+    # def save_checkpoint(self, models, optimizers, epoch, batch_idx, batch_size, dataset_perm, total_step_count, mpjpe,
+    #                     best_result=False):
+    #     """Save checkpoint."""
+    #     timestamp = datetime.datetime.now()
+
+    #     checkpoint = {}
+    #     for model in models:
+    #         checkpoint[model] = models[model].state_dict()
+    #     for optimizer in optimizers:
+    #         checkpoint[optimizer] = optimizers[optimizer].state_dict()
+    #     checkpoint['epoch'] = epoch
+    #     checkpoint['batch_idx'] = batch_idx
+    #     checkpoint['batch_size'] = batch_size
+    #     checkpoint['dataset_perm'] = dataset_perm
+    #     checkpoint['total_step_count'] = total_step_count
+    #     print(timestamp, 'Epoch:', epoch, 'Iteration:', batch_idx)
+    #     if best_result:
+    #         checkpoint_filename = os.path.abspath(
+    #             os.path.join(self.save_dir, 'Best_' + 'epoch:' + str(epoch) + '_MPJPE:' + str(mpjpe) + '_.pt'))
+    #     else:
+    #         checkpoint_filename = os.path.abspath(
+    #             os.path.join(self.save_dir, 'epoch:' + str(epoch) + '_MPJPE:' + str(mpjpe) + '.pt'))
+    #     print('Saving checkpoint file [' + checkpoint_filename + ']')
+    #     torch.save(checkpoint, checkpoint_filename)
+    #     return
+    def save_checkpoint(self, models, optimizers, epoch, batch_idx, batch_size, dataset_perm, total_step_count):
         """Save checkpoint."""
         timestamp = datetime.datetime.now()
-
+        checkpoint_filename = os.path.abspath(os.path.join(self.save_dir, timestamp.strftime('%Y_%m_%d-%H_%M_%S') + '.pt'))
         checkpoint = {}
         for model in models:
             checkpoint[model] = models[model].state_dict()
@@ -40,15 +64,9 @@ class CheckpointSaver(object):
         checkpoint['dataset_perm'] = dataset_perm
         checkpoint['total_step_count'] = total_step_count
         print(timestamp, 'Epoch:', epoch, 'Iteration:', batch_idx)
-        if best_result:
-            checkpoint_filename = os.path.abspath(
-                os.path.join(self.save_dir, 'Best_' + 'epoch:' + str(epoch) + '_MPJPE:' + str(mpjpe) + '_.pt'))
-        else:
-            checkpoint_filename = os.path.abspath(
-                os.path.join(self.save_dir, 'epoch:' + str(epoch) + '_MPJPE:' + str(mpjpe) + '.pt'))
         print('Saving checkpoint file [' + checkpoint_filename + ']')
-        torch.save(checkpoint, checkpoint_filename)
-        return
+        torch.save(checkpoint, checkpoint_filename) 
+        return    
     def save_checkpoint_(self, models, optimizers, epoch, batch_idx, batch_size, dataset_perm, total_step_count, mpjpe,
 
                         best_result=False):
@@ -75,6 +93,7 @@ class CheckpointSaver(object):
         print('Saving checkpoint file [' + checkpoint_filename + ']')
         torch.save(checkpoint, checkpoint_filename)
         return
+    
     def load_checkpoint(self, models, optimizers, checkpoint_file=None):
         """Load a checkpoint."""
         if checkpoint_file is None:
