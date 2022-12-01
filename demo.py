@@ -23,10 +23,10 @@ parser.add_argument(
     '--checkpoint',
     default='/home/sunqingping/mnt/data/graphcnn_data_processed/copy1080ti/2.PT', 
     help='Path to pretrained checkpoint')
-parser.add_argument('--img', type=str, help='Path to input image')
+parser.add_argument('--img_folder', type=str, help='Path to input image')
 parser.add_argument('--bbox', type=str, default=None, help='Path to .json file containing bounding box coordinates')
 parser.add_argument('--openpose', type=str, default=None, help='Path to .json containing openpose detections')
-parser.add_argument('--outfile', type=str, default=None,
+parser.add_argument('--output_path', type=str, default=None,
                     help='Filename of output images. If not set use input filename.')
 
 
@@ -86,8 +86,8 @@ def process_image(img_file, bbox_file, openpose_file, input_res=224):
 
 if __name__ == '__main__':
     args = parser.parse_args()
-    img_folder= './test_data'
-    output_path = './demo_result'
+    img_folder= args.img_folder
+    output_path = args.output_path
     
     img_list = [
         os.path.join(img_folder,img_name) for img_name in os.listdir(img_folder)]
