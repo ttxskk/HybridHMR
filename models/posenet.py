@@ -174,9 +174,9 @@ class PoseNet(nn.Module):
         )
 
         self.final_layer = nn.Sequential(
-            # nn.Conv2d(256, 24 * 64, kernel_size=1, stride=1,bias=False ),
-            nn.Conv2d(256, 24 * 64, kernel_size=1, stride=1),
-            # nn.BatchNorm2d(24 * 64),
+            nn.Conv2d(256, 24 * 64, kernel_size=1, stride=1,bias=False ),
+            # nn.Conv2d(256, 24 * 64, kernel_size=1, stride=1),
+            nn.BatchNorm2d(24 * 64),
         )
         # self.init_weights()
         self.pose_feature_net = nn.Sequential(
