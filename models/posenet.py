@@ -182,8 +182,8 @@ class PoseNet(nn.Module):
         self.pose_feature_net = nn.Sequential(
             ConvBottleNeck(in_channels=24 * 64, out_channels=512, nl_layer=nn.ReLU(inplace=True), norm_type='GN'),
             ConvBottleNeck(in_channels=512, out_channels=64, nl_layer=nn.ReLU(inplace=True), norm_type='GN'),
-            # nn.Conv2d(in_channels=64, out_channels=64,kernel_size=1,stride=2,bias=False ),
-            nn.Conv2d(in_channels=64, out_channels=64, kernel_size=1, stride=2),
+            nn.Conv2d(in_channels=64, out_channels=64,kernel_size=1,stride=2,bias=False ),
+            # nn.Conv2d(in_channels=64, out_channels=64, kernel_size=1, stride=2),
             nn.GroupNorm(64//8,64),
             ConvBottleNeck(in_channels=64, out_channels=32, nl_layer=nn.ReLU(inplace=True), norm_type='GN'),
             ConvBottleNeck(in_channels=32, out_channels=24, nl_layer=nn.ReLU(inplace=True), norm_type='GN'),
