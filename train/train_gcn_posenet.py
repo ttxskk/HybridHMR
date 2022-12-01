@@ -143,13 +143,13 @@ class Trainer(BaseTrainer):
                             out_hmr[10], out_431[7], out_431[5], out_431[6], out_431[9], out_431[8]))
                 self.step_count += 1
 
-                if self.step_count % self.options.summary_steps == 0:
-                    if epoch > -1:
-                        self.train_summaries_hmr(batch, *out_hmr)
-                        self.train_summaries_431(batch, *out_431)
-                        self.train_summaries_posenet(out_posenet)
-                    else:
-                        self.train_summaries_hmr(batch, *out_hmr)
+                # if self.step_count % self.options.summary_steps == 0:
+                #     if epoch > -1:
+                #         self.train_summaries_hmr(batch, *out_hmr)
+                #         self.train_summaries_431(batch, *out_431)
+                #         self.train_summaries_posenet(out_posenet)
+                #     else:
+                #         self.train_summaries_hmr(batch, *out_hmr)
 
 
 
@@ -157,24 +157,6 @@ class Trainer(BaseTrainer):
                 self.saver.save_checkpoint(self.models_dict, self.optimizers_dict, epoch, step + 1,
                                            self.options.batch_size, train_data_loader.sampler.dataset_perm,
                                            self.step_count, epoch)
-                # mpjpe, recon_err, mpjpe_431, recon_err_431, mpjpe_smpl_hmr, recon_err_hmr = self.test_all(epoch=epoch)
-                # self.mpjpe.append(mpjpe)
-                # self.recon_err.append(recon_err)
-                # self.mpjpe_431.append(mpjpe_431)
-                # self.recon_err_431.append(recon_err_431)
-                # self.mpjpe_smpl_hmr.append(mpjpe_smpl_hmr)
-                # self.recon_err_hmr.append(recon_err_hmr)
-                # self.test_summarise(epoch, mpjpe, recon_err, mpjpe_431, recon_err_431, mpjpe_smpl_hmr, recon_err_hmr)
-                #
-                # if self.best_result > mpjpe_431:
-                #     self.best_result = mpjpe_431
-                #     self.saver.save_checkpoint(self.models_dict, self.optimizers_dict, epoch, step + 1,
-                #                                self.options.batch_size, train_data_loader.sampler.dataset_perm,
-                #                                self.step_count, mpjpe_431, best_result=True)
-                # else:
-                #     self.saver.save_checkpoint(self.models_dict, self.optimizers_dict, epoch, step + 1,
-                #                                self.options.batch_size, train_data_loader.sampler.dataset_perm,
-                #                                self.step_count, mpjpe_431)
 
             self.checkpoint = None
 
@@ -489,216 +471,6 @@ class Trainer(BaseTrainer):
                                      global_step=self.step_count + test_step)
         # 记录图像
         self.summary_writer.add_image('test_rend_imgs_hmr_pred', rend_imgs_431, self.step_count + test_step)
-
-    # def test_all(self, batch_size=16, log_freq=20):
-    #     self.backbone.eval()
-    #     self.gcn_feature.eval()
-    #     self.graph_431.eval()
-    #     self.hmr_model.eval()
-    #     self.posenet.eval()
-    #     dataset = BaseDataset(self.options, 'h36m-p2', is_train=False)
-    #     data_loader = DataLoader(dataset, batch_size=batch_size, shuffle=False, num_workers=12)
-    #     device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
-    #
-    #     smpl = SMPL().cuda()
-    #     # Regressor for H36m joints
-    #     J_regressor = torch.from_numpy(np.load(cfg.JOINT_REGRESSOR_H36M)).float()
-    #
-    #     # Pose metrics
-    #     # MPJPE and Reconstruction error for the non-parametric and parametric shapes
-    #     mpjpe_1723 = np.zeros(len(dataset))
-    #     mpjpe_431 = np.zeros(len(dataset))
-    #     recon_err_1723 = np.zeros(len(dataset))
-    #     recon_err_431 = np.zeros(len(dataset))
-    #     mpjpe_hmr = np.zeros(len(dataset))
-    #     recon_err_hmr = np.zeros(len(dataset))
-    #
-    #     err_2d_hmr = np.zeros(len(dataset))
-    #     err_2d_431 = np.zeros(len(dataset))
-    #     err_2d_1723 = np.zeros(len(dataset))
-    #
-    #     # Shape metrics
-    #     # Mean per-vertex error
-    #     shape_err = np.zeros(len(dataset))
-    #     shape_err_431 = np.zeros(len(dataset))
-    #     shape_err_smpl = np.zeros(len(dataset))
-    #
-    #     eval_pose = True
-    #     eval_shape = False
-    #
-    #     kp3d_hmr = []
-    #     kp3d_431 = []
-    #     kp3d_1723 = []
-    #
-    #     kp2d_hmr = []
-    #     kp2d_431 = []
-    #     kp2d_1723 = []
-    #
-    #     test_generator = tqdm(data_loader)
-    #     for step, batch in enumerate(test_generator):
-    #         # Get ground truth annotations from the batch
-    #         gt_pose = batch['pose'].to(device)
-    #         gt_betas = batch['betas'].to(device)
-    #         # gt_vertices T_pose
-    #         gt_vertices = smpl(gt_pose, gt_betas)
-    #         images = batch['img'].to(device)
-    #         curr_batch_size = images.shape[0]
-    #
-    #         with torch.no_grad():
-    #             batch_size = images.shape[0]
-    #             # 1. backbone
-    #             global_feature, local_features = self.backbone(images)
-    #             # 2. global_feature encoder
-    #             global_feature_enc = self.gcn_feature(global_feature)
-    #             # 3. posenet
-    #             pose_feature, local_feature = self.posenet(local_features[-1])
-    #             # 4. attention local_feature
-    #             att_features = torch.matmul(self.graph_431.W_431, local_feature).permute(0, 2, 1)
-    #             # 5. hmr
-    #             pred_rotmat, pred_shape, pred_cam_hmr = self.hmr_model(global_feature)
-    #             pred_vertices_hmr = self.smpl(pred_rotmat, pred_shape)
-    #             pred_vertices_hmr_431 = self.mesh.downsample(pred_vertices_hmr, n1=0, n2=2).permute(0, 2, 1)
-    #             image_enc = global_feature_enc.view(batch_size, 1024, 1).expand(-1, -1, pred_vertices_hmr_431.shape[-1])
-    #             # no dropout
-    #             #image_enc = torch.cat([pred_vertices_hmr_431, image_enc, att_features], dim=1)
-    #             # pred_vertices_graphcnn_431, pred_camera_graphcnn_431 = self.graph_431(image_enc)
-    #             # 6. graphcnn
-    #
-    #             # dropout
-    #             pred_vertices_graphcnn_431, pred_camera_graphcnn_431 = self.graph_431(pred_vertices_hmr_431, image_enc, att_features)
-    #
-    #             pred_vertices_431_6890 = self.mesh.upsample(pred_vertices_graphcnn_431.transpose(1, 2), 2, 0)
-    #
-    #
-    #
-    #
-    #         # 3D pose evaluation
-    #         if eval_pose:
-    #             # Regressor broadcasting
-    #             J_regressor_batch = J_regressor[None, :].expand(pred_vertices_431_6890.shape[0], -1, -1).to(device)
-    #
-    #             # Get 14 ground truth joints
-    #             gt_keypoints_3d = batch['pose_3d'].cuda()
-    #             gt_keypoints_3d = gt_keypoints_3d[:, cfg.J24_TO_J14, :-1]
-    #             gt_keypoints_2d = batch['keypoints'].cuda()[:, cfg.J24_TO_J14, :-1]
-    #
-    #             pred_keypoints_3d_431 = torch.matmul(J_regressor_batch, pred_vertices_431_6890)
-    #
-    #             pred_kp2d_431 = orthographic_projection(pred_keypoints_3d_431, pred_cam_hmr)
-    #             kp_2d_err_431 = torch.sqrt(
-    #                 ((pred_kp2d_431[:, cfg.H36M_TO_J14, :] - gt_keypoints_2d) ** 2).sum(dim=-1)).mean(
-    #                 dim=-1).cpu().numpy()
-    #             kp2d_hmr.append(
-    #                 torch.sqrt(((pred_kp2d_431[:, cfg.H36M_TO_J14, :] - gt_keypoints_2d) ** 2).sum(dim=-1)).mean(
-    #                     dim=0).cpu().numpy())
-    #
-    #             pred_pelvis_431 = pred_keypoints_3d_431[:, [0], :].clone()
-    #             pred_keypoints_3d_431 = pred_keypoints_3d_431[:, cfg.H36M_TO_J14, :]
-    #             pred_keypoints_3d_431 = pred_keypoints_3d_431 - pred_pelvis_431
-    #
-    #             # Get 14 predicted joints from the SMPL mesh
-    #             pred_keypoints_3d_hmr = torch.matmul(J_regressor_batch, pred_vertices_hmr)
-    #
-    #             pred_kp2d_hmr = orthographic_projection(pred_keypoints_3d_hmr, pred_cam_hmr)
-    #             kp_2d_err_hmr = torch.sqrt(
-    #                 ((pred_kp2d_hmr[:, cfg.H36M_TO_J14, :] - gt_keypoints_2d) ** 2).sum(dim=-1)).mean(
-    #                 dim=-1).cpu().numpy()
-    #             kp2d_hmr.append(
-    #                 torch.sqrt(((pred_kp2d_hmr[:, cfg.H36M_TO_J14, :] - gt_keypoints_2d) ** 2).sum(dim=-1)).mean(
-    #                     dim=0).cpu().numpy())
-    #
-    #             pred_pelvis_hmr = pred_keypoints_3d_hmr[:, [0], :].clone()
-    #             pred_keypoints_3d_hmr = pred_keypoints_3d_hmr[:, cfg.H36M_TO_J14, :]
-    #             pred_keypoints_3d_hmr = pred_keypoints_3d_hmr - pred_pelvis_hmr
-    #
-    #             # Compute error metrics
-    #             error_431 = torch.sqrt(((pred_keypoints_3d_431 - gt_keypoints_3d) ** 2).sum(dim=-1)).mean(
-    #                 dim=-1).cpu().numpy()
-    #             kp3d_431.append(
-    #                 torch.sqrt(((pred_keypoints_3d_431 - gt_keypoints_3d) ** 2).sum(dim=-1)).mean(dim=0).cpu().numpy())
-    #
-    #             error_hmr = torch.sqrt(((pred_keypoints_3d_hmr - gt_keypoints_3d) ** 2).sum(dim=-1)).mean(
-    #                 dim=-1).cpu().numpy()
-    #             kp3d_hmr.append(torch.sqrt(((pred_keypoints_3d_hmr - gt_keypoints_3d) ** 2).sum(dim=-1)).mean(
-    #                 dim=0).cpu().numpy())
-    #
-    #             # mpjpe_1723[step * batch_size:step * batch_size + curr_batch_size] = error_1723
-    #             mpjpe_431[step * batch_size:step * batch_size + curr_batch_size] = error_431
-    #             mpjpe_hmr[step * batch_size:step * batch_size + curr_batch_size] = error_hmr
-    #
-    #             err_2d_hmr[step * batch_size:step * batch_size + curr_batch_size] = kp_2d_err_hmr
-    #             err_2d_431[step * batch_size:step * batch_size + curr_batch_size] = kp_2d_err_431
-    #             # err_2d_1723[step * batch_size:step * batch_size + curr_batch_size] = kp_2d_err_1723
-    #
-    #             # Reconstuction_error
-    #             # r_error_1723 = reconstruction_error(pred_keypoints_3d_1723.cpu().numpy(), gt_keypoints_3d.cpu().numpy(),
-    #             #                                     reduction=None)
-    #             r_error_431 = reconstruction_error(pred_keypoints_3d_431.cpu().numpy(), gt_keypoints_3d.cpu().numpy(),
-    #                                                reduction=None)
-    #             r_error_smpl = reconstruction_error(pred_keypoints_3d_hmr.cpu().numpy(), gt_keypoints_3d.cpu().numpy(),
-    #                                                 reduction=None)
-    #             # recon_err_1723[step * batch_size:step * batch_size + curr_batch_size] = r_error_1723
-    #             recon_err_431[step * batch_size:step * batch_size + curr_batch_size] = r_error_431
-    #             recon_err_hmr[step * batch_size:step * batch_size + curr_batch_size] = r_error_smpl
-    #             if step % 50 == 0 and step != 0:
-    #                 self.test_summaries_mesh_431(step, batch, pred_camera_graphcnn_431, pred_vertices_431_6890,
-    #                                              pred_kp2d_431, 1000 * mpjpe_431[:step * batch_size].mean(),
-    #                                              recon_err_431[:step * batch_size].mean())
-    #                 # self.test_summaries_mesh_1723(batch, pred_cam_hmr, pred_vert_1723, pred_kp2d_1723)
-    #                 self.test_summaries_mesh_hmr(step, batch, pred_cam_hmr, pred_vertices_hmr, pred_kp2d_hmr,
-    #                                              1000 * mpjpe_hmr[:step * batch_size].mean(),
-    #                                              recon_err_hmr[:step * batch_size].mean())
-    #         # Shape evaluation (Mean per-vertex error)
-    #         if eval_shape:
-    #             se = torch.sqrt(((pred_vertices_graphcnn_431 - gt_vertices) ** 2).sum(dim=-1)).mean(
-    #                 dim=-1).cpu().numpy()
-    #             se_smpl = torch.sqrt(((pred_vertices_hmr - gt_vertices) ** 2).sum(dim=-1)).mean(dim=-1).cpu().numpy()
-    #             shape_err[step * batch_size:step * batch_size + curr_batch_size] = se
-    #             shape_err_smpl[step * batch_size:step * batch_size + curr_batch_size] = se_smpl
-    #
-    #         test_generator.set_description(
-    #             ' Test  %d/%d ===>MPJPE: %f===>recon_err:  %f  ===>MPJPE_431: %f ===>recon_err_431: %f===>MPJPE_HMR: %f ===>recon_err_HMR: %f'
-    #             % (step, len(data_loader)
-    #                , 1000 * mpjpe_1723[:step * batch_size].mean()
-    #                , 1000 * recon_err_1723[:step * batch_size].mean()
-    #                , 1000 * mpjpe_431[:step * batch_size].mean()
-    #                , 1000 * recon_err_431[:step * batch_size].mean()
-    #                , 1000 * mpjpe_hmr[:step * batch_size].mean()
-    #                , 1000 * recon_err_hmr[:step * batch_size].mean()))
-    #
-    #     # Print final results during evaluation
-    #     print('*** Final Results ***')
-    #     print()
-    #     if eval_pose:
-    #         print('MPJPE (431): ' + str(1000 * mpjpe_431.mean()))
-    #         print('Reconstruction Error (431): ' + str(1000 * recon_err_431.mean()))
-    #         print('MPJPE (1723): ' + str(1000 * mpjpe_1723.mean()))
-    #         print('Reconstruction Error (1723): ' + str(1000 * recon_err_1723.mean()))
-    #         print('MPJPE (hmr): ' + str(1000 * mpjpe_hmr.mean()))
-    #         print('Reconstruction Error (hmr): ' + str(1000 * recon_err_hmr.mean()))
-    #         print()
-    #         print()
-    #         print('kp2d error (431): ')
-    #         print(np.array(kp2d_431).mean(axis=0))
-    #         print('kp2d error (1723): ')
-    #         print(np.array(kp2d_1723).mean(axis=0))
-    #         print('kp2d error (hmr): ')
-    #         print(np.array(kp2d_hmr).mean(axis=0))
-    #
-    #         print()
-    #         print('kp3d error (431): ')
-    #         print(np.array(kp3d_431).mean(axis=0))
-    #         print('kp3d error (1723): ')
-    #         print(np.array(kp3d_1723).mean(axis=0))
-    #         print('kp3d error (hmr): ')
-    #         print(np.array(kp3d_hmr).mean(axis=0))
-    #         print()
-    #     if eval_shape:
-    #         print('Shape Error (NonParam): ' + str(1000 * shape_err.mean()))
-    #         print('Shape Error (Param): ' + str(1000 * shape_err_smpl.mean()))
-    #         print()
-    #
-    #     return 1000 * mpjpe_1723.mean(), 1000 * recon_err_1723.mean(), 1000 * mpjpe_431.mean(), 1000 * recon_err_431.mean(), 1000 * mpjpe_hmr.mean(), 1000 * recon_err_hmr.mean()
 
     def test_all(self,epoch, batch_size=16, log_freq=20):
         self.backbone.eval()
