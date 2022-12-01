@@ -16,7 +16,7 @@ class CMR(nn.Module):
         super(CMR, self).__init__()
         self.graphcnn_1723 = GraphCNN_1723(mesh._A,  num_layers, num_channels)
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-        self.hmr_model = hmr('/content/drive/MyDrive/EE_5811/data/smpl_mean_params.npz', pretrained=True).to(self.device)
+        self.hmr_model = hmr('./data/smpl_mean_params.npz', pretrained=True).to(self.device)
         self.smpl = SMPL()
         self.mesh = mesh
         if pretrained_checkpoint is not None:

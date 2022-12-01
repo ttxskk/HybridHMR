@@ -57,7 +57,7 @@ class Trainer(BaseTrainer):
         self.mesh._A
         self.best_result = 107.
         self.backbone = resnet50(pretrained=True).to(self.device)
-        self.hmr_model = HMR('/content/drive/MyDrive/EE_5811/data/smpl_mean_params.npz').to(self.device)
+        self.hmr_model = HMR('./data/smpl_mean_params.npz').to(self.device)
         self.gcn_feature = GCN_feature().to(self.device)
         self.posenet = PoseNet().to(self.device)
         self.jointregressor = JointLocationLoss().to(self.device)
