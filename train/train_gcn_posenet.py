@@ -134,11 +134,15 @@ class Trainer(BaseTrainer):
                 batch = {k: v.to(self.device) if isinstance(v, torch.Tensor) else v for k, v in batch.items()}
                 if epoch > -1:
                     out_hmr, out_431,out_posenet = self.train_step(batch, epoch)
-                    # self.test_all(1)
-                    # train_gen.set_description(
-                    #     'Epoch:%d total_loss:%f ' % (epoch, out_posenet))
+                    # Save checkpoint every checkpoint_steps steps
+                    if self.step_count % self.options.checkpoint_steps == 0:
+                        self.saver.save_checkpoint(self.models_dict, self.optimizers_dict, 
+                                                   epoch, step+1, self.options.batch_size, 
+                                                   train_data_loader.sampler.dataset_perm, 
+                                                   self.step_count) 
+                        tqdm.write('Checkpoint saved')
                     train_gen.set_description(
-                        'Epoch:%d total_loss:%f total_loss_hmr:%f total_loss_431:%f => jointloca_loss:%f => kp2d_hmr:%f => kp3d_hmr:%f => loss_shape:%f => pose:%f => betas:%f => loss_shape_431:%f => kp2d_431:%f => kp3d_431:%f => edge_431:%f => normal_431:%f ' % (
+                        'Epoch:%d total_loss:%f total_loss_hmr:%f total_loss_431:%f jointloca_loss:%f kp2d_hmr:%f \n kp3d_hmr:%f loss_shape:%f pose:%f betas:%f loss_shape_431:%f kp2d_431:%f kp3d_431:%f edge_431:%f normal_431:%f ' % (
                             epoch, out_hmr[1], out_hmr[2], out_431[1],out_posenet, out_hmr[6], out_hmr[7], out_hmr[8], out_hmr[9],
                             out_hmr[10], out_431[7], out_431[5], out_431[6], out_431[9], out_431[8]))
                 self.step_count += 1
@@ -154,9 +158,14 @@ class Trainer(BaseTrainer):
 
 
             if self.checkpoint is None:
-                self.saver.save_checkpoint(self.models_dict, self.optimizers_dict, epoch, step + 1,
-                                           self.options.batch_size, train_data_loader.sampler.dataset_perm,
-                                           self.step_count, epoch)
+                self.saver.save_checkpoint(
+                    self.models_dict, 
+                    self.optimizers_dict, 
+                    epoch+1, 
+                    0, 
+                    self.options.batch_size, 
+                    None, 
+                    self.step_count) 
 
             self.checkpoint = None
 

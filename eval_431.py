@@ -30,7 +30,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--checkpoint', default=None, help='Path to network checkpoint')
 parser.add_argument('--dataset', default='lsp', choices=['h36m-p1', 'h36m', 'h36m-p2', 'up-3d', 'lsp','coco'],
                     help='Choose evaluation dataset')
-parser.add_argument('--config', default='/content/drive/MyDrive/EE_5811/data/models/model_config.json', help='Path to config file containing model architecture etc.')
+parser.add_argument('--config', default='/content/drive/MyDrive/EE_5811/data/config.json', help='Path to config file containing model architecture etc.')
 parser.add_argument('--log_freq', default=50, type=int, help='Frequency of printing intermediate results')
 parser.add_argument('--batch_size', default=32, help='Batch size for testing')
 parser.add_argument('--shuffle', default=False, action='store_true', help='Shuffle data')
@@ -264,7 +264,6 @@ def run_evaluation(model, dataset_name, dataset,
 
 if __name__ == '__main__':
     args = parser.parse_args()
-    args.checkpoint = '/home/sunqingping/mnt/data/graphcnn_data_processed/copy1080ti/90_57.82.pt'
     with open(args.config, 'r') as f:
         options = json.load(f)
         options = namedtuple('options', options.keys())(**options)
