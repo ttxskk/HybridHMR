@@ -8,7 +8,7 @@ from os.path import join
 
 H36M_TRAIN = ''
 H36M_ROOT = ''
-LSP_ROOT = '' 
+LSP_ROOT = './data/dataset/lsp' 
 LSPET_ROOT = ''
 LSP_ORIGINAL_ROOT = ''
 UPI_S1H_ROOT = ''
