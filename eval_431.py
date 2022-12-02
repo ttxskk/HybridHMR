@@ -249,8 +249,8 @@ def run_evaluation(model, dataset_name, dataset,
         print('Reconstruction Error (Param): ' + str(1000 * recon_err_smpl.mean()))
         print()
     if eval_shape:
-        print('Shape Error (NonParam): ' + str(1000 * shape_err.mean()))
-        print('Shape Error (Param): ' + str(1000 * shape_err_smpl.mean()))
+        print('Shape Error (Coarse): ' + str(1000 * shape_err_smpl.mean()))
+        print('Shape Error (Refine): ' + str(1000 * shape_err.mean()))
         print()
     if eval_masks:
         print('Accuracy: ', accuracy / pixel_count)
