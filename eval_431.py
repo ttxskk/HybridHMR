@@ -219,28 +219,28 @@ def run_evaluation(model, dataset_name, dataset,
                 parts_pixel_count += np.prod(np.array(gt_parts.shape))
 
         # Print intermediate results during evaluation
-        if step % log_freq == log_freq - 1:
-            if eval_pose:
-                print('MPJPE (NonParam): ' + str(1000 * mpjpe[:step * batch_size].mean()))
-                print('Reconstruction Error (NonParam): ' + str(1000 * recon_err[:step * batch_size].mean()))
-                print('MPJPE (Param): ' + str(1000 * mpjpe_smpl[:step * batch_size].mean()))
-                print('Reconstruction Error (Param): ' + str(1000 * recon_err_smpl[:step * batch_size].mean()))
-                print()
-            if eval_shape:
-                print('Shape Error (NonParam): ' + str(1000 * shape_err[:step * batch_size].mean()))
-                print('Shape Error (Param): ' + str(1000 * shape_err_smpl[:step * batch_size].mean()))
-                print()
-            if eval_masks:
-                print('Accuracy: ', accuracy / pixel_count)
-                print('F1: ', f1.mean())
-                print()
-            if eval_parts:
-                print('Parts Accuracy: ', parts_accuracy / parts_pixel_count)
-                print('Parts F1 (BG): ', parts_f1[[0, 1, 2, 3, 4, 5, 6]].mean())
-                print()
+        # if step % log_freq == log_freq - 1:
+        #     if eval_pose:
+        #         print('MPJPE (NonParam): ' + str(1000 * mpjpe[:step * batch_size].mean()))
+        #         print('Reconstruction Error (NonParam): ' + str(1000 * recon_err[:step * batch_size].mean()))
+        #         print('MPJPE (Param): ' + str(1000 * mpjpe_smpl[:step * batch_size].mean()))
+        #         print('Reconstruction Error (Param): ' + str(1000 * recon_err_smpl[:step * batch_size].mean()))
+        #         print()
+        #     if eval_shape:
+        #         print('Shape Error (NonParam): ' + str(1000 * shape_err[:step * batch_size].mean()) +'\n')
+        #         print('Shape Error (Param): ' + str(1000 * shape_err_smpl[:step * batch_size].mean()) + '\n')
+        #         print()
+        #     if eval_masks:
+        #         print('Accuracy: ', accuracy / pixel_count)
+        #         print('F1: ', f1.mean())
+        #         print()
+        #     if eval_parts:
+        #         print('Parts Accuracy: ', parts_accuracy / parts_pixel_count)
+        #         print('Parts F1 (BG): ', parts_f1[[0, 1, 2, 3, 4, 5, 6]].mean())
+        #         print()
 
     # Print final results during evaluation
-    print('*** Final Results ***')
+    # print('*** Final Results ***')
     print()
     if eval_pose:
         print('MPJPE (NonParam): ' + str(1000 * mpjpe.mean()))
